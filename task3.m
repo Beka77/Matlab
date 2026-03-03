@@ -1,16 +1,25 @@
-armstrongNums = [];
+clc
+clear
 
 for n = 2:4
-    startNum = 10^(n - 1);
-    endNum = 10^n - 1;
-
-    for num = startNum:endNum
-        digitsVec = num2str(num) - '0';
-        if sum(digitsVec .^ n) == num
-            armstrongNums(end + 1) = num; %#ok<SAGROW>
+    
+    disp('Числа Армстронга:')
+    
+    for num = 10^(n-1) : 10^n - 1
+        
+        t = num;
+        sum_pow = 0;
+        
+        while t > 0
+            d = mod(t,10);      % последняя цифра
+            sum_pow = sum_pow + d^n;
+            t = floor(t/10);     % убираем цифру
         end
+        
+        if sum_pow == num
+            disp(num)
+        end
+        
     end
+        
 end
-
-disp('Числа Армстронга из 2, 3 и 4 цифр:');
-disp(armstrongNums);

@@ -1,12 +1,25 @@
-x = input('Введите число x: ');
-y = input('Введите 25 чисел в виде вектора [y1 y2 ... y25]: ');
+x = input('Enter x: ');
+y = input('Enter 25 numbers as [ ... ]: ');
 
-if numel(y) ~= 25
-    error('Нужно ввести ровно 25 чисел.');
+min_d = inf;
+
+for i = 1:24
+    for j = i+1:25
+        
+        avg = (y(i) + y(j)) / 2;
+        d = abs(avg - x);
+        
+        if d < min_d
+            min_d = d;
+            best_i = i;
+            best_j = j;
+        end
+        
+    end
 end
 
-[iBest, jBest, yBest1, yBest2, bestMean, minDiff] = closest_mean_pair(x, y);
+disp('The numbers you are looking for:')
+disp([y(best_i), y(best_j)])
 
-fprintf('Лучшие элементы: y(%d)=%.6g и y(%d)=%.6g\n', iBest, yBest1, jBest, yBest2);
-fprintf('Их среднее арифметическое: %.6g\n', bestMean);
-fprintf('|mean - x| = %.6g\n', minDiff);
+disp('their average:')
+disp((y(best_i) + y(best_j)) / 2)
