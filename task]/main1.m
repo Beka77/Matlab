@@ -29,7 +29,6 @@ for i = 1:k
     cy = mean(yi);
     plot(cx, cy, 'kx', 'MarkerSize', 14, 'LineWidth', 3);
 
-    % круг поменьше: средний радиус + запас
     d = sqrt((xi-cx).^2 + (yi-cy).^2);
     r = mean(d) + 0.8*std(d);
 
@@ -37,8 +36,8 @@ for i = 1:k
     plot(cx + r*cos(t), cy + r*sin(t), clr{i}, 'LineWidth', 2);
 end
 
-xlabel('Годовой доход');
-ylabel('Оценка расходов');
-title('K-означает кластеризацию с центроидами');
-legend('Точка','Центроид','Основная группа(окружность)');
+xlabel('Annual income');
+ylabel('Cost estimation');
+title('K-means clustering with centroids');
+legend('Point','The centroid','The main group(circle)');
 hold off;
