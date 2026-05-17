@@ -1,0 +1,76 @@
+clc;
+clear;
+close all;
+
+h = 50; % шаг сетки в км
+
+% [широта долгота]
+cities = [
+    42.87 74.59;   % Bishkek
+    40.53 72.80;   % Osh
+    42.52 72.24;   % Talas
+    41.43 75.99;   % Naryn
+    42.49 78.39    % Karakol
+];
+
+cityNames = {'Bishkek','Osh','Talas','Naryn','Karakol'};
+
+lat = cities(:,1);
+lon = cities(:,2);
+
+margin = 0.15;
+
+latMin = min(lat) - margin;
+latMax = max(lat) + margin;
+lonMin = min(lon) - margin;
+lonMax = max(lon) + margin;
+
+meanLat = mean(lat);
+
+dLat = h / 111.32;
+dLon = h / (111.32 * cosd(meanLat));
+
+latGrid = latMin:dLat:latMax;
+lonGrid = lonMin:dLon:lonMax;
+
+[LonGrid, LatGrid] = meshgrid(lonGrid, latGrid);
+
+gridPoints = [LatGrid(:), LonGrid(:)];
+
+numPoints = size(gridPoints,1);
+numCities = size(cities,1);
+
+dist = zeros(numPoints, numCities);
+
+for i = 1:numCities
+    dist(:,i) = haversine( ...
+        gridPoints(:,1), ...
+        gridPoints(:,2), ...
+        lat(i), ...
+        lon(i));
+end
+
+[~, clusterID] = min(dist, [], 2);
+
+figure;
+hold on;
+grid on;
+
+scatter(gridPoints(:,2), gridPoints(:,1), 40, clusterID, 'filled');
+plot(lon, lat, 'kp', 'MarkerSize', 14, 'MarkerFaceColor', 'y');
+
+for i = 1:numCities
+    text(lon(i)+0.05, lat(i), cityNames{i});
+end
+
+rectLon = [lonMin lonMax lonMax lonMin lonMin];
+rectLat = [latMin latMin latMax latMax latMin];
+
+plot(rectLon, rectLat, 'k-', 'LineWidth', 2);
+
+xlabel('Longitude');
+ylabel('Latitude');
+title('Кыргызстан: кластеризация сетки');
+
+axis equal;
+hold off;
